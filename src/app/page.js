@@ -6,6 +6,7 @@ import styles from './page.module.css';
 export default function Home() {
   const [query, setQuery] = useState('');
   const [queryResult, setQueryResult] = useState([]);
+  const [queryError, setQueryError] = useState([]);
 
   const handleChange = (e) => {
     setQuery(e.target.value);
@@ -14,7 +15,13 @@ export default function Home() {
   const handleClick = async () => {
     try {
       const result = await window.ipcRenderer.invoke('execute-sql', query);
-      setQueryResult(result);
+      if (result.data) {
+        setQueryResult(result.data);
+        setQueryError(null);
+      } else {
+        setQueryResult([]);
+        setQueryError(result.error.toString());
+      }
     } catch (e) {
       console.error(e);
     }
@@ -41,6 +48,7 @@ export default function Home() {
               queryResult.map((row, index) => (
                 <li key={index}>{JSON.stringify(row)}</li> // Adjust rendering based on the structure of your query result
               ))}
+            {queryError && <li>{queryError}</li>}
           </ul>
         </div>
       </div>
