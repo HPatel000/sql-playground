@@ -2,11 +2,13 @@
 
 import { useState } from 'react';
 import styles from './page.module.css';
+import { useAppContext } from './context';
 
 export default function Home() {
   const [query, setQuery] = useState('');
   const [queryResult, setQueryResult] = useState([]);
   const [queryError, setQueryError] = useState([]);
+  const { runQuery, userState } = useAppContext();
 
   const handleChange = (e) => {
     setQuery(e.target.value);
@@ -14,7 +16,7 @@ export default function Home() {
 
   const handleClick = async () => {
     try {
-      const result = await window.ipcRenderer.invoke('execute-sql', query);
+      const result = await runQuery(query);
       if (result.data) {
         setQueryResult(result.data);
         setQueryError(null);
@@ -30,7 +32,7 @@ export default function Home() {
   return (
     <main className={styles.main}>
       <div>
-        <h1>Welcome to SQL Playground</h1>
+        <h1>Welcome to SQL Playground : {userState.username}</h1>
         <div>
           <textarea
             value={query}
@@ -46,7 +48,7 @@ export default function Home() {
           <ul>
             {queryResult &&
               queryResult.map((row, index) => (
-                <li key={index}>{JSON.stringify(row)}</li> // Adjust rendering based on the structure of your query result
+                <li key={index}>{JSON.stringify(row)}</li>
               ))}
             {queryError && <li>{queryError}</li>}
           </ul>

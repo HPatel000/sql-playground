@@ -1,8 +1,7 @@
-const { error } = require('console');
 const { app, BrowserWindow, ipcMain } = require('electron');
 // const serve = require('electron-serve');
 const path = require('path');
-const { Sequelize } = require('sequelize');
+const runQuery = require('./backend/sequelize');
 
 // const appServe = app.isPackaged
 //   ? serve({
@@ -30,33 +29,20 @@ const createWindow = () => {
   });
   // }
 
-  ipcMain.handle('execute-sql', async (event, query) => {
-    const sequelize = new Sequelize('world', 'root', 'root', {
-      dialect: 'mysql',
-      host: 'localhost',
+  ipcMain.handle('execute-sql', async (event, queryInfo) => {
+    return runQuery(queryInfo);
+  });
+
+  ipcMain.handle('open-login-window', () => {
+    const logInWindow = new BrowserWindow({
+      width: 600,
+      height: 400,
+      webPreferences: {
+        nodeIntegration: true,
+        contextIsolation: false,
+      },
     });
-
-    try {
-      const [result, metadata] = await sequelize.query(query);
-      return {
-        data: result,
-      };
-    } catch (e) {
-      return {
-        error: e,
-      };
-    }
-
-    // return new Promise((resolve, reject) => {
-    //   sequelize.query(query, (error, results) => {
-    //     if (error) {
-    //       reject(error);
-    //     } else {
-    //       resolve(results);
-    //     }
-    //     sequelize.end();
-    //   });
-    // });
+    logInWindow.loadURL('http://localhost:3000');
   });
 };
 
