@@ -21,7 +21,30 @@ const runQuery = async (queryInfo) => {
     return {
       error: e,
     };
+  } finally {
+    sequelize.close();
   }
 };
 
-module.exports = runQuery;
+const authenticateUser = async (userInfo) => {
+  if (!userInfo) return null;
+  const sequelize = new Sequelize(null, userInfo.username, userInfo.password, {
+    dialect: 'mysql',
+    host: 'localhost',
+  });
+  try {
+    await sequelize.authenticate();
+    return {
+      data: true,
+    };
+  } catch (e) {
+    console.log(e);
+    return {
+      error: e,
+    };
+  } finally {
+    sequelize.close();
+  }
+};
+
+module.exports = { runQuery, authenticateUser };

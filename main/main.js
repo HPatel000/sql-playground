@@ -1,7 +1,7 @@
 const { app, BrowserWindow, ipcMain } = require('electron');
 // const serve = require('electron-serve');
 const path = require('path');
-const runQuery = require('./backend/sequelize');
+const { runQuery, authenticateUser } = require('./backend/sequelize');
 
 // const appServe = app.isPackaged
 //   ? serve({
@@ -28,26 +28,16 @@ const createWindow = () => {
     win.webContents.reloadIgnoringCache();
   });
   // }
-
-  ipcMain.handle('execute-sql', async (event, queryInfo) => {
-    return runQuery(queryInfo);
-  });
-
-  ipcMain.handle('open-login-window', () => {
-    const logInWindow = new BrowserWindow({
-      width: 600,
-      height: 400,
-      webPreferences: {
-        nodeIntegration: true,
-        contextIsolation: false,
-      },
-    });
-    logInWindow.loadURL('http://localhost:3000');
-  });
 };
 
 app.on('ready', () => {
   createWindow();
+  ipcMain.handle('execute-sql', async (event, queryInfo) => {
+    return runQuery(queryInfo);
+  });
+  ipcMain.handle('authenticate-user', async (event, userInfo) => {
+    return authenticateUser(userInfo);
+  });
 });
 
 app.on('window-all-closed', () => {

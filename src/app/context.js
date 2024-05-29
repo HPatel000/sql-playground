@@ -5,10 +5,7 @@ import { createContext, useContext, useState } from 'react';
 const AppContext = createContext();
 
 export function AppWrapper({ children }) {
-  const userState = {
-    username: 'root',
-    password: 'root',
-  };
+  const [userState, setUserState] = useState();
 
   const [db, setDB] = useState('world');
 
@@ -17,9 +14,11 @@ export function AppWrapper({ children }) {
     setDB(db);
   };
 
-  const setCurrUserInfo = ({ username, password }) => {
-    userState.username = username;
-    userState.password = password;
+  const setCurrUserInfo = (username, password) => {
+    setUserState({
+      username,
+      password,
+    });
   };
 
   const runQuery = async (query) => {
@@ -31,9 +30,20 @@ export function AppWrapper({ children }) {
     });
   };
 
+  const authenticate = async (userInfo) => {
+    return await window.ipcRenderer.invoke('authenticate-user', userInfo);
+  };
+
   return (
     <AppContext.Provider
-      value={{ userState, db, setCurrDB, setCurrUserInfo, runQuery }}
+      value={{
+        userState,
+        db,
+        setCurrDB,
+        setCurrUserInfo,
+        runQuery,
+        authenticate,
+      }}
     >
       {children}
     </AppContext.Provider>
