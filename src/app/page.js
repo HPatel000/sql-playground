@@ -21,7 +21,8 @@ export default function Page() {
         enableSystem
         disableTransitionOnChange
       >
-        {userState?.username && userState?.password ? <Home /> : <LoginForm />}
+        {/* {userState?.username && userState?.password ? <Home /> : <LoginForm />} */}
+        <Home />
       </ThemeProvider>
     </main>
   );

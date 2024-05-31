@@ -5,7 +5,10 @@ import { createContext, useContext, useState } from 'react';
 const AppContext = createContext();
 
 export function AppWrapper({ children }) {
-  const [userState, setUserState] = useState();
+  const [userState, setUserState] = useState({
+    username: 'root',
+    password: 'root',
+  });
 
   const [db, setDB] = useState('world');
 

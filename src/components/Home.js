@@ -1,55 +1,46 @@
 'use client';
-import { useAppContext } from '@/app/context';
+import {
+  ResizableHandle,
+  ResizablePanel,
+  ResizablePanelGroup,
+} from '@/components/ui/resizable';
+import { QueryResult } from './QueryResult';
+import { ScrollArea } from './ui/scroll-area';
+import QueryWriter from './QueryWriter';
 import { useState } from 'react';
 
 export default function Home() {
-  const [query, setQuery] = useState('');
-  const [queryResult, setQueryResult] = useState([]);
+  const [queryRes, setQueryRes] = useState([]);
   const [queryError, setQueryError] = useState([]);
-  const { runQuery, userState } = useAppContext();
-
-  const handleChange = (e) => {
-    setQuery(e.target.value);
-  };
-
-  const handleClick = async () => {
-    try {
-      const result = await runQuery(query);
-      if (result.data) {
-        setQueryResult(result.data);
-        setQueryError(null);
-      } else {
-        setQueryResult([]);
-        setQueryError(result.error.toString());
-      }
-    } catch (e) {
-      console.error(e);
-    }
-  };
-
   return (
-    <div>
-      <h1>Welcome to SQL Playground : {userState.username}</h1>
-      <div>
-        <textarea
-          value={query}
-          onChange={handleChange}
-          rows={4}
-          cols={50}
-          placeholder='Enter your SQL query'
-        ></textarea>
-      </div>
-      <button onClick={handleClick}>Run!</button>
-      <div>
-        <h2>Query Results:</h2>
-        <ul>
-          {queryResult &&
-            queryResult.map((row, index) => (
-              <li key={index}>{JSON.stringify(row)}</li>
-            ))}
-          {queryError && <li>{queryError}</li>}
-        </ul>
-      </div>
-    </div>
+    <ResizablePanelGroup
+      direction='horizontal'
+      className='w-screen rounded-lg border'
+    >
+      <ResizablePanel defaultSize={25}>
+        <ScrollArea className='px-4 py-2 h-full overflow-auto'>
+          <span className='font-semibold'>One</span>
+        </ScrollArea>
+      </ResizablePanel>
+      <ResizableHandle />
+      <ResizablePanel defaultSize={75}>
+        <ResizablePanelGroup direction='vertical'>
+          <ResizablePanel defaultSize={75}>
+            <ScrollArea className='px-4 py-2 h-full overflow-auto'>
+              <QueryWriter
+                setQueryRes={setQueryRes}
+                setQueryError={setQueryError}
+              />
+            </ScrollArea>
+          </ResizablePanel>
+          <ResizableHandle />
+          <ResizablePanel defaultSize={25}>
+            <ScrollArea className='px-4 py-2 h-full overflow-auto'>
+              <QueryResult data={queryRes} error={queryError} />
+            </ScrollArea>
+          </ResizablePanel>
+        </ResizablePanelGroup>
+      </ResizablePanel>
+    </ResizablePanelGroup>
   );
 }
