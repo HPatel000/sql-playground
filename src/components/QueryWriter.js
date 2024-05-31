@@ -1,21 +1,23 @@
 'use client';
 import { useAppContext } from '@/app/context';
-import { useState } from 'react';
+import { useCallback, useState } from 'react';
+import CodeMirror from '@uiw/react-codemirror';
+import { vscodeDark } from '@uiw/codemirror-theme-vscode';
+import { sql } from '@codemirror/lang-sql';
 
 export default function QueryWriter({ setQueryRes, setQueryError }) {
   const [query, setQuery] = useState('');
   const { runQuery } = useAppContext();
 
-  const handleChange = (e) => {
-    setQuery(e.target.value);
-  };
+  const onChange = useCallback((val, viewUpdate) => {
+    setQuery(val);
+  }, []);
 
   const handleClick = async () => {
     try {
       const result = await runQuery(query);
       if (result.data) {
         setQueryRes(result.data);
-        console.log(result.data);
         setQueryError(null);
       } else {
         setQueryRes([]);
@@ -27,14 +29,13 @@ export default function QueryWriter({ setQueryRes, setQueryError }) {
   };
 
   return (
-    <div>
-      <textarea
-        value={query}
-        onChange={handleChange}
-        rows={4}
-        cols={50}
-        placeholder='Enter your SQL query'
-      ></textarea>
+    <div className='h-100'>
+      <CodeMirror
+        height='200px'
+        extensions={[sql()]}
+        theme={vscodeDark}
+        onChange={onChange}
+      />
       <button onClick={handleClick}>Run!</button>
     </div>
   );

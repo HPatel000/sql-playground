@@ -26,7 +26,7 @@ export default function Home() {
       <ResizablePanel defaultSize={75}>
         <ResizablePanelGroup direction='vertical'>
           <ResizablePanel defaultSize={75}>
-            <ScrollArea className='px-4 py-2 h-full overflow-auto'>
+            <ScrollArea className='h-full overflow-auto'>
               <QueryWriter
                 setQueryRes={setQueryRes}
                 setQueryError={setQueryError}
