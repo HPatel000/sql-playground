@@ -2,7 +2,7 @@
 import { useAppContext } from '@/app/context';
 import { useState } from 'react';
 
-export default function MainWindow() {
+export default function Home() {
   const [query, setQuery] = useState('');
   const [queryResult, setQueryResult] = useState([]);
   const [queryError, setQueryError] = useState([]);
