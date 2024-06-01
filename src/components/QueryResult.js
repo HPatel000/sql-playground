@@ -11,7 +11,6 @@ import {
 import { ArrowUpDown } from 'lucide-react';
 
 import { Button } from '@/components/ui/button';
-import { Checkbox } from '@/components/ui/checkbox';
 import {
   Table,
   TableBody,
@@ -22,7 +21,7 @@ import {
 } from '@/components/ui/table';
 import { useState } from 'react';
 
-export function QueryResult({ data, error }) {
+export default function QueryResult({ data, error }) {
   const [sorting, setSorting] = useState([]);
   const [columnFilters, setColumnFilters] = useState([]);
   const [columnVisibility, setColumnVisibility] = useState({});

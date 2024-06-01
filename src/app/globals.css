@@ -65,3 +65,13 @@
   width: 100vw;
   height: 100vh;
 }
+
+.actionbar {
+  /* display: flex;
+  align-items: center;
+  justify-content: flex-end; */
+}
+
+.actionIcon {
+  cursor: pointer;
+}

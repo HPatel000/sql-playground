@@ -4,14 +4,33 @@ import {
   ResizablePanel,
   ResizablePanelGroup,
 } from '@/components/ui/resizable';
-import { QueryResult } from './QueryResult';
-import { ScrollArea } from './ui/scroll-area';
-import QueryWriter from './QueryWriter';
 import { useState } from 'react';
+import { ScrollArea } from './ui/scroll-area';
+import { useAppContext } from '@/app/context';
+import QueryResult from './QueryResult';
+import QueryWriter from './QueryWriter';
+import Actionbar from './Actionbar';
 
 export default function Home() {
+  const { runQuery } = useAppContext();
+  const [query, setQuery] = useState();
   const [queryRes, setQueryRes] = useState([]);
   const [queryError, setQueryError] = useState([]);
+
+  const handleQueryRun = async () => {
+    try {
+      const result = await runQuery(query);
+      if (result.data) {
+        setQueryRes(result.data);
+        setQueryError(null);
+      } else {
+        setQueryRes([]);
+        setQueryError(result.error.toString());
+      }
+    } catch (e) {
+      console.error(e);
+    }
+  };
   return (
     <ResizablePanelGroup
       direction='horizontal'
@@ -26,10 +45,11 @@ export default function Home() {
       <ResizablePanel defaultSize={75}>
         <ResizablePanelGroup direction='vertical'>
           <ResizablePanel defaultSize={75}>
+            <Actionbar handleQueryRun={handleQueryRun} />
             <ScrollArea className='h-full overflow-auto'>
               <QueryWriter
-                setQueryRes={setQueryRes}
-                setQueryError={setQueryError}
+                setQuery={setQuery}
+                handleQueryRun={handleQueryRun}
               />
             </ScrollArea>
           </ResizablePanel>
