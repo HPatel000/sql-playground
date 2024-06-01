@@ -55,7 +55,7 @@ export default function Home() {
           </ResizablePanel>
           <ResizableHandle />
           <ResizablePanel defaultSize={25}>
-            <ScrollArea className='px-4 py-2 h-full overflow-auto'>
+            <ScrollArea className='p-2 h-full overflow-auto'>
               <QueryResult data={queryRes} error={queryError} />
             </ScrollArea>
           </ResizablePanel>

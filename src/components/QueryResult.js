@@ -72,9 +72,9 @@ export default function QueryResult({ data, error }) {
   return (
     <>
       {error && <p class='text-red-500 text-xs italic'>{error}</p>}
-      {data && (
+      {!error && Array.isArray(data) && (
         <div className='w-full'>
-          <div className='rounded-md'>
+          <div className='rounded-md border'>
             <Table>
               <TableHeader>
                 {table.getHeaderGroups().map((headerGroup) => (
@@ -124,12 +124,19 @@ export default function QueryResult({ data, error }) {
               </TableBody>
             </Table>
           </div>
-          <div className='flex items-center justify-end space-x-2 py-4'>
+          {/* <div className='flex items-center justify-end space-x-2 py-4'>
             <div className='flex-1 text-sm text-muted-foreground'>
               {table.getFilteredSelectedRowModel().rows.length} of{' '}
               {table.getFilteredRowModel().rows.length} row(s) selected.
             </div>
-          </div>
+          </div> */}
+        </div>
+      )}
+      {!error && (
+        <div className='mt-2 p-2'>
+          <p class='text-green-500 text-xs italic'>
+            Query Executed Successfully.
+          </p>
         </div>
       )}
     </>
