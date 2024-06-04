@@ -10,6 +10,7 @@ import { useAppContext } from '@/app/context';
 import QueryResult from './QueryResult';
 import QueryWriter from './QueryWriter';
 import Actionbar from './Actionbar';
+import Sidebar from './Sidebar';
 
 export default function Home() {
   const { runQuery } = useAppContext();
@@ -38,7 +39,9 @@ export default function Home() {
     >
       <ResizablePanel defaultSize={25}>
         <ScrollArea className='px-4 py-2 h-full overflow-auto'>
-          <span className='font-semibold'>One</span>
+          <span className='font-semibold'>
+            <Sidebar />
+          </span>
         </ScrollArea>
       </ResizablePanel>
       <ResizableHandle />
